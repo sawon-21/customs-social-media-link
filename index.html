@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Social Profile</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Create Your Profile</h1>
+    <form id="user-form">
+      <input type="text" id="username" placeholder="Your Name" required />
+      <input type="url" id="profile-pic" placeholder="Profile Picture URL" required />
+      <input type="url" id="facebook-link" placeholder="Facebook URL" required />
+      <input type="url" id="instagram-link" placeholder="Instagram URL" />
+      <input type="url" id="twitter-link" placeholder="Twitter URL" />
+      <input type="url" id="linkedin-link" placeholder="LinkedIn URL" />
+      <button type="submit">Generate Link</button>
+    </form>
+    <p id="result"></p>
+  </div>
+</body>
+</html>
