@@ -1,25 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Custom Social Profile</title>
-  <link rel="stylesheet" href="style.css">
-  <script type="module" src="app.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Link Card</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 500px;
+            margin: 20px;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            background: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.2);
+        }
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 50px auto 20px;
+            border: 4px solid white;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .card-body {
+            text-align: center;
+            padding: 20px;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .card-text {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .social-links a {
+            color: #555;
+            margin: 0 10px;
+            font-size: 1.5rem;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .social-links a:hover {
+            color: #007bff;
+            transform: translateY(-5px);
+        }
+        .share-btn {
+            margin-top: 20px;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .share-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #6a11cb;
+            box-shadow: 0px 0px 10px rgba(106, 17, 203, 0.2);
+        }
+        .input-group .btn {
+            border-radius: 10px;
+        }
+        .added-links {
+            margin-top: 10px;
+        }
+        .added-links .badge {
+            margin: 5px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            background: #f1f1f1;
+            color: #333;
+            font-weight: normal;
+            display: inline-flex;
+            align-items: center;
+        }
+        .added-links .badge i {
+            margin-right: 5px;
+        }
+        .added-links .badge .close-btn {
+            margin-left: 10px;
+            cursor: pointer;
+            color: #ff4d4d;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Create Your Profile</h1>
-    <form id="user-form">
-      <input type="text" id="username" placeholder="Your Name" required />
-      <input type="url" id="profile-pic" placeholder="Profile Picture URL" required />
-      <input type="url" id="facebook-link" placeholder="Facebook URL" required />
-      <input type="url" id="instagram-link" placeholder="Instagram URL" />
-      <input type="url" id="twitter-link" placeholder="Twitter URL" />
-      <input type="url" id="linkedin-link" placeholder="LinkedIn URL" />
-      <button type="submit">Generate Link</button>
-    </form>
-    <p id="result"></p>
-  </div>
+    <div class="container" id="formContainer">
+        <h2 class="text-center mb-4"><i class="fas fa-link"></i> Create Your Link Card</h2>
+        <form id="linkCardForm">
+            <div class="mb-3">
+                <label class="form-label"><i class="fas fa-user"></i> Full Name</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label"><i class="fas fa-pencil-alt"></i> Bio</label>
+                <textarea class="form-control" id="bio" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label"><i class="fas fa-camera"></i> Profile Picture (URL)</label>
+                <input type="url" class="form-control" id="profilePic" placeholder="https://example.com/profile.jpg">
+            </div>
+            <div class="mb-3">
+                <label class="form-label"><i class="fas fa-link"></i> Social Media Links</label>
+                <div id="socialLinksContainer">
+                    <div class="input-group mb-2">
+                        <select class="form-select" id="socialMediaSelect">
+                            <option value="facebook">Facebook</option>
+                            <option value="twitter">Twitter</option>
+                            <option value="instagram">Instagram</option>
+                            <option value="linkedin">LinkedIn</option>
+                            <option value="github">GitHub</option>
+                            <option value="youtube">YouTube</option>
+                            <option value="tiktok">TikTok</option>
+                            <option value="snapchat">Snapchat</option>
+                            <option value="pinterest">Pinterest</option>
+                            <option value="reddit">Reddit</option>
+                            <option value="whatsapp">WhatsApp</option>
+                            <option value="telegram">Telegram</option>
+                            <option value="discord">Discord</option>
+                        </select>
+                        <input type="text" class="form-control" id="socialLinkInput" placeholder="Paste your link here">
+                        <button type="button" class="btn btn-outline-secondary" onclick="addSocialLink()"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+                <div id="addedLinks" class="added-links"></div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100"><i class="fas fa-magic"></i> Generate Link Card</button>
+        </form>
+    </div>
+
+    <div class="container card" id="linkCard" style="display: none;">
+        <div class="card-body">
+            <img src="" alt="Profile Picture" id="cardProfilePic" class="profile-img">
+            <h5 class="card-title" id="cardName"></h5>
+            <p class="card-text" id="cardBio"></p>
+            <div class="social-links" id="cardSocialLinks"></div>
+        </div>
+        <div class="text-center p-3">
+            <button class="btn share-btn" onclick="shareLink()"><i class="fas fa-share"></i> Share Link</button>
+            <p class="mt-3"><a href="#" id="shortLink" target="_blank"></a></p>
+            <br><i><small>Try <a href="index.html" style="background-color:gold"> My Social</small
+            ></i>
+        </div>
+    </div>
+
+    <script>
+        const socialLinks = [];
+
+        function addSocialLink() {
+            const platform = document.getElementById("socialMediaSelect").value;
+            const link = document.getElementById("socialLinkInput").value.trim();
+            if (!link) return alert("Please enter a valid link.");
+
+            socialLinks.push({ platform, link });
+            document.getElementById("socialLinkInput").value = "";
+
+            // Display added links
+            const addedLinksDiv = document.getElementById("addedLinks");
+            addedLinksDiv.innerHTML += `
+                <div class="badge">
+                    <i class="fab fa-${platform}"></i> ${platform}
+                    <span class="close-btn" onclick="removeSocialLink('${platform}', '${link}')"><i class="fas fa-times"></i></span>
+                </div>
+            `;
+        }
+
+        function removeSocialLink(platform, link) {
+            const index = socialLinks.findIndex(item => item.platform === platform && item.link === link);
+            if (index !== -1) socialLinks.splice(index, 1);
+            document.getElementById("addedLinks").innerHTML = socialLinks.map(item => `
+                <div class="badge">
+                    <i class="fab fa-${item.platform}"></i> ${item.platform}
+                    <span class="close-btn" onclick="removeSocialLink('${item.platform}', '${item.link}')"><i class="fas fa-times"></i></span>
+                </div>
+            `).join("");
+        }
+
+        document.getElementById("linkCardForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById("name").value.trim();
+            const bio = document.getElementById("bio").value.trim();
+            const profilePic = document.getElementById("profilePic").value;
+
+            const uniqueID = name.replace(/\s+/g, "").toLowerCase() + "_" + Date.now(); // Generate unique ID
+            localStorage.setItem(`linkCard_${uniqueID}`, JSON.stringify({ name, bio, profilePic, socialLinks }));
+
+            const uniqueLink = `${window.location.origin}${window.location.pathname}?user=${uniqueID}`;
+            document.getElementById("shortLink").href = uniqueLink;
+            document.getElementById("shortLink").textContent = uniqueLink;
+
+            document.getElementById("formContainer").style.display = "none";
+            loadLinkCard(uniqueID);
+
+            generateShortLink(uniqueLink);
+        });
+
+        function loadLinkCard(user) {
+            const data = JSON.parse(localStorage.getItem(`linkCard_${user}`));
+            if (!data) return;
+
+            document.getElementById("cardName").textContent = data.name;
+            document.getElementById("cardBio").textContent = data.bio;
+            document.getElementById("cardProfilePic").src = data.profilePic || "https://via.placeholder.com/100";
+            document.getElementById("cardSocialLinks").innerHTML = data.socialLinks.map(item => `
+                <a href="${item.link}" target="_blank"><i class="fab fa-${item.platform}"></i></a>
+            `).join("");
+
+            document.getElementById("linkCard").style.display = "block";
+        }
+
+        async function generateShortLink(longUrl) {
+            try {
+                const response = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
+                const shortUrl = await response.text();
+
+                document.getElementById("shortLink").href = shortUrl;
+                document.getElementById("shortLink").textContent = shortUrl;
+            } catch (error) {
+                console.error("Error generating short link:", error);
+                document.getElementById("shortLink").textContent = "Short link unavailable";
+            }
+        }
+
+        function shareLink() {
+            const shortLink = document.getElementById("shortLink").href;
+            if (navigator.share) {
+                navigator.share({
+                    title: "My Social Media Link Card",
+                    url: shortLink,
+                });
+            } else {
+                alert("Sharing is not supported in your browser. Copy the link manually.");
+            }
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const userParam = urlParams.get("user");
+
+        if (userParam && localStorage.getItem(`linkCard_${userParam}`)) {
+            document.getElementById("formContainer").style.display = "none";
+            loadLinkCard(userParam);
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+
+local storage replace to firebase realtime database 
+
+apiKey: "AIzaSyB7nnOJ3amwR2SeJIqiFYHioC2cy-NcoUA",
+  authDomain: "chatwithme-1def4.firebaseapp.com",
+  databaseURL: "https://chatwithme-1def4-default-rtdb.firebaseio.com",
+  projectId: "chatwithme-1def4",
+  storageBucket: "chatwithme-1def4.firebasestorage.app",
+  messagingSenderId: "267897726967",
+  appId: "1:267897726967:web:564c193f857b8fd1d7f0f2",
+  measurementId: "G-K31JV23N4V"
+};
