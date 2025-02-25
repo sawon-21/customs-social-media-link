@@ -7,8 +7,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-        /* CSS remains unchanged */
-                body {
+        /* Your CSS styles here */
+       body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
             min-height: 100vh;
@@ -237,12 +237,14 @@
 
             try {
                 // Save data to Firebase
+                console.log("Saving data to Firebase...");
                 await database.ref('linkCards/' + uniqueID).set({
                     name,
                     bio,
                     profilePic,
                     socialLinks
                 });
+                console.log("Data saved successfully!");
 
                 const uniqueLink = `${window.location.origin}${window.location.pathname}?user=${uniqueID}`;
                 document.getElementById("shortLink").href = uniqueLink;
@@ -261,25 +263,43 @@
         // Load link card from Firebase
         async function loadLinkCard(user) {
             try {
+                console.log("Loading data for user:", user);
                 const snapshot = await database.ref('linkCards/' + user).once('value');
                 const data = snapshot.val();
+                console.log("Data loaded:", data);
 
                 if (!data) {
-                    alert("No link card found!");
+                    alert("No link card found for the provided user ID.");
                     return;
                 }
 
-                document.getElementById("cardName").textContent = data.name;
-                document.getElementById("cardBio").textContent = data.bio;
+                // Update the card with the loaded data
+                document.getElementById("cardName").textContent = data.name || "No Name Provided";
+                document.getElementById("cardBio").textContent = data.bio || "No Bio Provided";
                 document.getElementById("cardProfilePic").src = data.profilePic || "https://via.placeholder.com/100";
-                document.getElementById("cardSocialLinks").innerHTML = data.socialLinks.map(item => `
-                    <a href="${item.link}" target="_blank"><i class="fab fa-${item.platform}"></i></a>
-                `).join("");
 
+                // Clear existing social links
+                const cardSocialLinks = document.getElementById("cardSocialLinks");
+                cardSocialLinks.innerHTML = "";
+
+                // Add social links if they exist
+                if (data.socialLinks && data.socialLinks.length > 0) {
+                    data.socialLinks.forEach(item => {
+                        const linkElement = document.createElement("a");
+                        linkElement.href = item.link;
+                        linkElement.target = "_blank";
+                        linkElement.innerHTML = `<i class="fab fa-${item.platform}"></i>`;
+                        cardSocialLinks.appendChild(linkElement);
+                    });
+                } else {
+                    cardSocialLinks.innerHTML = "<p>No social links added.</p>";
+                }
+
+                // Show the card
                 document.getElementById("linkCard").style.display = "block";
             } catch (error) {
                 console.error("Error loading data:", error);
-                alert("Error loading link card. Please try again.");
+                alert("Error loading link card. Please check the console for details.");
             }
         }
 
