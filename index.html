@@ -8,8 +8,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         /* Your CSS styles here */
+        @import url('https://fonts.googleapis.com/css2?family=Caudex:ital,wght@0,400;0,700;1,400;1,700&display=swap');  
+
        body {
-            font-family: 'Arial', sans-serif;
+            font-family: "Caudex", serif;
             background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
             min-height: 100vh;
             display: flex;
@@ -33,8 +35,8 @@
             box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.2);
         }
         .profile-img {
-            width: 100px;
-            height: 100px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
             object-fit: cover;
             margin: 50px auto 20px;
@@ -317,18 +319,29 @@
             }
         }
 
-        // Share link using Web Share API
-        function shareLink() {
-            const shortLink = document.getElementById("shortLink").href;
-            if (navigator.share) {
-                navigator.share({
-                    title: "My Social Media Link Card",
-                    url: shortLink,
-                });
-            } else {
-                alert("Sharing is not supported in your browser. Copy the link manually.");
-            }
-        }
+// Share link using Web Share API
+function shareLink() {
+    const shortLink = document.getElementById("shortLink").href;
+
+    if (!shortLink || shortLink === "#") {
+        alert("Short link is not available yet. Please generate the link card first.");
+        return;
+    }
+
+    if (navigator.share) {
+        navigator.share({
+            title: "My Social Media Link Card",
+            url: shortLink, // Share the short link
+        });
+    } else {
+        // Fallback for browsers that don't support the Web Share API
+        navigator.clipboard.writeText(shortLink).then(() => {
+            alert("Short link copied to clipboard: " + shortLink);
+        }).catch(() => {
+            alert("Sharing is not supported in your browser. Copy the link manually: " + shortLink);
+        });
+    }
+}
 
         // Check for user parameter in URL
         const urlParams = new URLSearchParams(window.location.search);
